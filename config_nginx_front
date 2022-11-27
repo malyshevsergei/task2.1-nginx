@@ -1,0 +1,14 @@
+proxy_cache_path /var/www/html/cache levels=1:2 keys_zone=my_cache:10m max_size=10g 
+                 inactive=60m use_temp_path=off;
+
+server {
+        listen   80;
+
+	proxy_cache my_cache;
+	location / {
+		proxy_cache_key $scheme$proxy_host$uri$is_args$arg_utm_source;
+    		proxy_set_header Host $host;
+    		proxy_set_header X-Real-IP $remote_addr;
+    		proxy_pass http://localhost:8080;
+	}
+}
